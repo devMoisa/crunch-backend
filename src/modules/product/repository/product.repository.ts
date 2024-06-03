@@ -1,11 +1,11 @@
 import { BaseRepository } from 'src/base/base.repository';
-import { UserEntity } from '../entity/user.entity';
 import { Injectable } from '@nestjs/common';
 import { PrismaDatabase } from 'src/database/prisma.database';
+import { ProductEntity } from '../entity/product.entity';
 
 @Injectable()
-export class UserRepository extends BaseRepository<UserEntity> {
+export class ProductRepository extends BaseRepository<ProductEntity> {
   constructor(private prisma: PrismaDatabase) {
-    super(prisma.user);
+    super(prisma.product);
   }
 }

@@ -12,7 +12,6 @@ export abstract class BaseRepository<TEntity extends BaseEntity> {
     filter: any = null,
     orderByColumn = 'createdAt',
     orderByDirection = 'desc',
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     include: any = null,
   ): Promise<BaseResponsePaginationResult> {
     const skip = (pageNumber - 1) * pageSize;
@@ -36,7 +35,9 @@ export abstract class BaseRepository<TEntity extends BaseEntity> {
       orderBy: orderBy,
     });
 
-    const totalItems = await this.prismaModel.count();
+    const totalItems = await this.prismaModel.count({
+      where: finalFilter,
+    });
 
     return {
       items,

@@ -14,7 +14,7 @@ import { PrismaDatabase } from 'src/database/prisma.database';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '360000000s' },
+      signOptions: { expiresIn: '120s' },
     }),
   ],
   controllers: [AuthController],

@@ -1,8 +1,9 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ProductRepository } from './repository/product.repository';
 import { FavoriteProductDto } from './dto/favorite-product.dto';
 import { GetAllProductsDTO } from './dto/get-all-products.dto';
 import { mapObjectsOfArrays } from 'src/utils/mapObjectsOfArrays';
+import { DeleteProductDTO } from './dto/delete-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -47,6 +48,33 @@ export class ProductService {
       });
 
       return;
+    } catch (error) {
+      throw new HttpException(error.message, error.status || 500);
+    }
+  }
+
+  async softDelete(dto: DeleteProductDTO) {
+    try {
+      const data = await this.repository.getById(dto.productId);
+
+      if (data.deleted) {
+        return {
+          message: 'This product has been already deleted.',
+        };
+      }
+
+      if (dto.userId !== data.userId) {
+        throw new HttpException(
+          'You do not have permission to delete items belonging to another user.',
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+
+      await this.repository.delete(dto.productId);
+
+      return {
+        message: 'product deleted with success',
+      };
     } catch (error) {
       throw new HttpException(error.message, error.status || 500);
     }
